@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>GPA Calculator</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .centered-table {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+    <script src="/index.js"></script>
+    <script>
+        function calculateGradePoints() {
+            courseNames = []
+            CreditHours = []
+            grades = []
+
+
+            let courses = document.getElementsByClassName("courseName")
+            courses = Array.from(courses)
+            courses.forEach(i => courseNames.push(i.value))
+
+            let Credit_Hours = document.getElementsByClassName("Credit_Hours")
+            Credit_Hours = Array.from(Credit_Hours)
+            Credit_Hours.forEach(i => CreditHours.push(parseInt(i.value)))
+
+            let gradeInput = document.getElementsByClassName("gradeInput")
+            gradeInput = Array.from(gradeInput)
+            gradeInput.forEach(i => grades.push(parseInt(i.value)))
+
+            AllGrades = []
+            courseNames.forEach((i, index) => {
+                AllGrades.push({ "course": i, "Credit_Hours": CreditHours[index], "Total_Mark": grades[index] })
+            })
+
+            var GPA = calculateGPA(AllGrades)
+            console.log(GPA)
+
+            var GPA_text = document.getElementById("GPA").textContent = JSON.stringify(calculateGPA(AllGrades))
+
+            let gradePoints = document.getElementsByClassName("gradePoints")
+            gradePoints = Array.from(gradePoints)
+            gradePoints.forEach((i, index) => {
+                i.textContent = GPA.result[index].gradePoint
+            })
+
+            let grade = document.getElementsByClassName("grade")
+            grade = Array.from(grade)
+            grade.forEach((i, index) => {
+                i.textContent = GPA.result[index].Grade
+            })
+        }
+
+       function addCourse() {
+        let inputs = document.getElementById("lables")
+
+        inputs.children[0].innerHTML += `<tr class="inputs">
+            <td><input type="text" class= "courseName"></td>
+            <td><input type="number" class= "Credit_Hours" min="1" max="100"></td>
+            <td><input type="number" class= "gradeInput" min="0" max="100"></td>
+            <td><span class= "gradePoints">0</span></td>
+            <td><span class="grade">0</span></td>
+            <td><button class="remove e${inputs.children[0].children.length}">X</button></td>
+        </tr>`
+       }
+
+       function removeCell(event) {
+            if (event.target.classList.contains('remove')) {
+                // .parentNode.parentNode.remove()
+                console.log(event.target)
+                
+                let ele = document.getElementsByClassName(event.target.classList[1])
+                ele[0].parentNode.parentNode.remove()
+            }
+        }
+
+        window.onload = function() {
+            // Add click event listener to the table
+            document.getElementById('lables').addEventListener('click', removeCell);
+        };
+    </script>
+</head>
+<body>
+    <h2>حاسبة المعدل التراكمي</h2>
+    <table class="centered-table" id="lables">
+        <tr>
+            <th>Course</th>
+            <th>Credit_Hours</th>
+            <th>Mark</th>
+            <th>Points</th>
+            <th>Grade</th>
+            <th>X</th>
+
+        </tr>
+        <tr class="inputs">
+            <td><input type="text" class="courseName"></td>
+            <td><input type="number" class="Credit_Hours" min="1" max="100"></td>
+            <td><input type="number" class="gradeInput" min="0" max="100"></td>
+            <td><span class="gradePoints">0</span></td>
+            <td><span class="grade">0</span></td>
+            <td><button class="remove e1">X</button></td>
+        </tr>
+    </table>
+
+    <button onclick="addCourse()">add Course</button>
+    <button onclick="calculateGradePoints()">calculate Grade Points</button>
+
+    <br><br>
+    Your GPA : <p id="GPA"></p>
+
+</body>
+</html>
